@@ -1,0 +1,94 @@
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load and preprocess dataset
+data = pd.read_csv("expenses.csv")
+
+# Convert 'amount' column to numeric
+data['amount'] = pd.to_numeric(data['amount'], errors='coerce')
+data = data.dropna(subset=['amount'])
+
+# Convert 'date' column to datetime
+data['date'] = pd.to_datetime(data['date'], errors='coerce')
+data = data.dropna(subset=['date'])
+
+# Extract date-related features
+data['day_of_week'] = data['date'].dt.day_name()
+data['month'] = data['date'].dt.month
+data['day'] = data['date'].dt.day
+data['year'] = data['date'].dt.year
+data['year_month'] = data['date'].dt.to_period('M')
+data['week'] = data['date'].dt.isocalendar().week
+
+# Encode category
+data['category_encoded'] = LabelEncoder().fit_transform(data['category'])
+
+# Total spend by category
+total_by_category = data.groupby('category')['amount'].sum().sort_values(ascending=False)
+top_category = total_by_category.idxmax()
+
+print("\n💰 Total Spend by Category:")
+print(total_by_category)
+
+print(f"\n You spend the most on: **{top_category}**")
+
+# Recommendations
+recommendations = []
+total_spend = data['amount'].sum()
+
+if total_by_category[top_category] > 0.4 * total_spend:
+    recommendations.append(f"⚠️ Try reducing expenses in **{top_category}** as it dominates your spending.")
+
+# Weekly pattern
+spend_by_dayofweek = data.groupby('day_of_week')['amount'].sum().sort_values(ascending=False)
+highest_day = spend_by_dayofweek.idxmax()
+recommendations.append(f" You spend the most on **{highest_day}**. Consider reviewing expenses on that day.")
+
+# Monthly pattern
+monthly_avg = data.groupby('month')['amount'].mean()
+peak_month = monthly_avg.idxmax()
+recommendations.append(f" Your peak spending is in **month {peak_month}**. Try budgeting better for that period.")
+
+print("\n🔍 Spending Insights (by Day of Week):")
+print(spend_by_dayofweek)
+
+print("\n💡 Recommendations:")
+for rec in recommendations:
+    print(rec)
+
+# ----------------------------
+# 📊 Daily Category-wise Spend
+daily_spend = data.groupby(['date', 'category'])['amount'].sum().unstack(fill_value=0)
+print("\nDaily Spend by Category:")
+print(daily_spend.tail())
+
+# 📊 Weekly Category-wise Spend
+weekly_spend = data.groupby(['year', 'week', 'category'])['amount'].sum().unstack(fill_value=0)
+print("\n Weekly Spend by Category:")
+print(weekly_spend.tail())
+
+# 📊 Monthly Category-wise Spend
+monthly_spend = data.groupby(['year_month', 'category'])['amount'].sum().unstack(fill_value=0)
+print("\n Monthly Spend by Category:")
+print(monthly_spend.tail())
+
+# 📊 Yearly Category-wise Spend
+yearly_spend = data.groupby(['year', 'category'])['amount'].sum().unstack(fill_value=0)
+print("\n Yearly Spend by Category:")
+print(yearly_spend.tail())
+
+# 🧮 Total Expense Summary
+print(f"\nTotal Expense: {total_spend:.2f}")
+
+# ----------------------------
+# Visualization - Total Spend by Category
+plt.figure(figsize=(10, 5))
+sns.barplot(x=total_by_category.index, y=total_by_category.values, palette="viridis")
+plt.title("Total Spend by Category")
+plt.ylabel("Amount")
+plt.xlabel("Category")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()

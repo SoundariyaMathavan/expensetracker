@@ -1,0 +1,3 @@
+@echo off
+echo Starting the fixed Flask backend...
+python app_fixed.py

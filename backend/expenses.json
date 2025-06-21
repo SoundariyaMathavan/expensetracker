@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "amount": 12.5,
+    "description": "Starbucks coffee",
+    "date": "2023-05-01",
+    "category": "Food"
+  },
+  {
+    "id": 2,
+    "amount": 75.3,
+    "description": "Whole Foods groceries",
+    "date": "2023-05-02",
+    "category": "Food"
+  },
+  {
+    "id": 3,
+    "amount": 45.0,
+    "description": "Uber ride to airport",
+    "date": "2023-05-03",
+    "category": "Transportation"
+  },
+  {
+    "id": 4,
+    "amount": 120.0,
+    "description": "Dinner at Italian restaurant",
+    "date": "2023-05-05",
+    "category": "Food"
+  },
+  {
+    "id": 5,
+    "amount": 9.99,
+    "description": "Netflix subscription",
+    "date": "2023-05-10",
+    "category": "Entertainment"
+  },
+  {
+    "id": 6,
+    "amount": 65.4,
+    "description": "Amazon purchase - headphones",
+    "date": "2023-05-15",
+    "category": "Utilities"
+  },
+  {
+    "id": 7,
+    "amount": 35.2,
+    "description": "Gas station",
+    "date": "2023-05-20",
+    "category": "Transportation"
+  },
+  {
+    "id": 8,
+    "amount": 15.0,
+    "description": "Lunch with colleagues",
+    "date": "2023-05-25",
+    "category": "Food"
+  }
+]
